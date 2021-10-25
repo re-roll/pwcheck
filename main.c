@@ -78,7 +78,7 @@ int lvl_2 (int p, char str[max_len])
 {
     if ((p == 1) && (lvl_1(str)))
         return 1;
-        
+
     if ((p == 2) && (lvl_1(str)))
         return 1;
 
@@ -94,7 +94,7 @@ int lvl_2 (int p, char str[max_len])
 int lvl_3 (int p, char str[max_len])
 {
     int k = 1;
-    for (int i = 1; i < max_len; i++)
+    for (int i = 1; i < max_len - 1; i++)
     {
         if (str[i] == str[i-1])
             k++;
@@ -107,6 +107,35 @@ int lvl_3 (int p, char str[max_len])
     return 1;
 }
 
+int subStr(int i, int j, char* str)
+{
+    int len = strLen(str);
+    for (i = 0; i < len; i++)
+    {
+        for (j = 1; j < len - 1; i++)
+        {
+            if (str[i] == str[j])
+            {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int lvl_4(int p, char str[max_len])
+{
+    if (subStr(0, 1, str))
+    {
+        for (int k = 2; k <= p; k++)
+        {
+            subStr(i+1, j+1, str);
+        }
+    }
+    else
+        return 0;
+}
+
 int main(int argc, char* argv[])
 {
     int lvl = 0;
@@ -115,7 +144,7 @@ int main(int argc, char* argv[])
 
     for (int i = 0; i < argc; i++)
     {
-        printf("%s", argv[i]);
+        scanf("%s", argv[i]);
     }
 
     printf("Level: %d\n", lvl);
