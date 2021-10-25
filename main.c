@@ -111,29 +111,37 @@ int subStr(int i, int j, char* str)
 {
     int len = strLen(str);
     for (i = 0; i < len; i++)
-    {
         for (j = 1; j < len - 1; i++)
-        {
             if (str[i] == str[j])
-            {
                 return 1;
-            }
-        }
-    }
+    
     return 0;
 }
 
 int lvl_4(int p, char str[max_len])
 {
-    if (subStr(0, 1, str))
+    for (int k = 2; k <= p; k++)
+        for (int i = 0; i < max_len; i++)
+            for (int j = 1; j < max_len - 1; i++)
+            if (subStr(i, j, str))
+                return 0;
+    
+    return 0;
+}
+
+int cmprStr(char* str1, char* str2)
+{
+    int len = strLen(str1);
+    for (int i = 0; i < len; i++)
     {
-        for (int k = 2; k <= p; k++)
-        {
-            subStr(i+1, j+1, str);
-        }
+        if (str1[i] != str2[i])
+            return 0;
     }
-    else
+
+    if (strLen(str1) != strLen(str2))
         return 0;
+
+    return 1;
 }
 
 int main(int argc, char* argv[])
@@ -142,10 +150,18 @@ int main(int argc, char* argv[])
     int par = 0;
     int stats = 0;
 
-    for (int i = 0; i < argc; i++)
+    for (int i = 1; i < argc; i++)
     {
-        scanf("%s", argv[i]);
+        if (i == 1)
+            lvl = atoi(argv[i]);
+        if (i == 2)
+            par = atoi(argv[i]);
+        if (i == 3)
+            if (cmprStr(argv[i], "--stats"))
+                stats = 1;
     }
+
+    
 
     printf("Level: %d\n", lvl);
     printf("Parameter: %d\n", par);
