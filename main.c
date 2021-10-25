@@ -52,7 +52,7 @@ int specSym (char str[max_len])
 {
     for (int i = 0; i < max_len; i++)
     {
-        if (((str[i] > 31) && (str[i] < 48)) || ((str[i] > 57) && (str[i] < 65)) || ((str[i] > 122) && (str[i] < 127)))
+        if (((str[i] > 31) && (str[i] < 48)) || ((str[i] > 57) && (str[i] < 65)) || ((str[i] > 90) && (str[i] < 97)) || ((str[i] > 122) && (str[i] < 127)))
             return 1;
         if (str[i] == '\0')
             break;
@@ -93,18 +93,19 @@ int lvl_2 (int p, char str[max_len])
 
 int lvl_3 (int p, char str[max_len])
 {
-    int k = 1;
-    for (int i = 1; i < max_len - 1; i++)
-    {
-        if (str[i] == str[i-1])
-            k++;
-        else
-            k = 1;
+        if (p == 1)
+            return -1;
+
+        int k = 1;
+        int len = strLen(str);
+        for (int i = 0; i < len; i++)
+            if (str[i] == str[i+1])
+                k++;
+
         if (k == p)
             return 0;
-    }
-
-    return 1;
+        else
+            return 1;
 }
 
 int subStr(int i, int j, char* str)
@@ -120,13 +121,17 @@ int subStr(int i, int j, char* str)
 
 int lvl_4(int p, char str[max_len])
 {
-    for (int k = 2; k <= p; k++)
-        for (int i = 0; i < max_len; i++)
-            for (int j = 1; j < max_len - 1; i++)
-            if (subStr(i, j, str))
-                return 0;
+    if (lvl_3(p, str))
+    {
+        int len = strLen(str);
+        for (int k = 2; k <= p; k++)
+            for (int i = 0; i < len; i++)
+                for (int j = 1; j < len - 1; i++)
+                    if (subStr(i, j, str))
+                        return 0;
+    }
     
-    return 0;
+    return 1;
 }
 
 int cmprStr(char* str1, char* str2)
@@ -156,16 +161,41 @@ int main(int argc, char* argv[])
             lvl = atoi(argv[i]);
         if (i == 2)
             par = atoi(argv[i]);
-        if (i == 3)
-            if (cmprStr(argv[i], "--stats"))
-                stats = 1;
+        if (cmprStr(argv[i], "--stats"))
+            stats = 1;
     }
-
-    
 
     printf("Level: %d\n", lvl);
     printf("Parameter: %d\n", par);
     printf("-- stats: %d\n", stats);
+
+    char pswd[100];
+
+    printf("\n");
+
+    scanf("%s", pswd);
+
+    if (lvl == 1)
+        if (lvl_1(pswd))
+            printf("New: %s\n", pswd);
+    
+    if (lvl == 2)
+        if (lvl_2(par, pswd))
+            printf("New: %s\n", pswd);
+
+    if (lvl == 3)
+    {
+        if (lvl_3(par, pswd) == -1)
+            printf("Enter the correct parameter on this level\n");
+        else if (lvl_3(par, pswd))
+            printf("New: %s\n", pswd);
+    }
+
+    if (lvl == 4)
+        if (lvl_4(par, pswd))
+            printf("New: %s\n", pswd);
+
+    printf("\n");
 
     return 0;
 }
