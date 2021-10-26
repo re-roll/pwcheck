@@ -93,16 +93,28 @@ int lvl_2 (int p, char str[max_len])
 
 int lvl_3 (int p, char str[max_len])
 {
+        if (!(lvl_2(p, str)))
+            return 0;
+        
         if (p == 1)
             return -1;
 
-        int k = 1;
+        int j = 1;
+        int max = 0;
         int len = strLen(str);
         for (int i = 0; i < len; i++)
+        {
             if (str[i] == str[i+1])
-                k++;
-
-        if (k == p)
+            {
+                j++;
+                if (j > max)
+                    max = j;
+            }
+            else
+                j = 1;
+            
+        }
+        if (max >= p)
             return 0;
         else
             return 1;
@@ -121,15 +133,15 @@ int subStr(int i, int j, char* str)
 
 int lvl_4(int p, char str[max_len])
 {
-    if (lvl_3(p, str))
-    {
-        int len = strLen(str);
-        for (int k = 2; k <= p; k++)
-            for (int i = 0; i < len; i++)
-                for (int j = 1; j < len - 1; i++)
-                    if (subStr(i, j, str))
-                        return 0;
-    }
+    if (!(lvl_3(p, str)))
+        return 0;
+
+    int len = strLen(str);
+    for (int k = 2; k <= p; k++)
+        for (int i = 0; i < len; i++)
+            for (int j = 1; j < len - 1; i++)
+                if (subStr(i, j, str))
+                    return 0;
     
     return 1;
 }
