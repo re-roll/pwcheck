@@ -129,11 +129,11 @@ int lvl_4(int p, char str[max_len])
     int len = strLen(str);
     int cnt = 0;
     int alt_i = 0;
-    int alt_j = 0;
+    int alt_j = 1;
 
     for (int i = 0; i < len; i++)
     {
-        for (int j = i + 1; j < len; j++)
+        for (int j = i+1; j < len; j++)
         {
             printf("%d %d\n", i, j);
             if (str[i] == str[j])
@@ -141,18 +141,14 @@ int lvl_4(int p, char str[max_len])
                 cnt++;
                 alt_i = i;
                 alt_j = j;
-                printf("Count: %d char: %c\n", cnt, str[i]);
+                printf("Count: %d char: %c; i: %d j: %d\n", cnt, str[i], i, j);
                 break;
             }
 
             if (str[i] == '\0')
                 break;
-            
-            if (alt_j != 0)
-                break;
         }
-        if (alt_i != 0)
-            break;
+        break;
     }
 
     alt_i++;
@@ -175,24 +171,20 @@ int lvl_4(int p, char str[max_len])
                     printf("Count: %d char: %c\n", cnt, str[i]);
                     break;
                 }
-                
 
                 if (str[i] == '\0')
                     break;
                 
-                if (alt_j != 0)
-                    break;
             }
-            if (alt_i != 0)
-                break;
+            alt_j++;
         }
         alt_i++;
-        alt_j++;
         if (cnt == k)
             break;
     }
 
     printf("Count is: %d\n", cnt);
+    printf("\n");
      
     return 1;
 }
@@ -249,14 +241,18 @@ int main(int argc, char* argv[])
     if (lvl == 3)
     {
         if (lvl_3(par, pswd) == -1)
-            printf("Enter the correct parameter on this level\n");
+            printf("Enter the correct parameter on this level (0 passwords were shown)\n");
         else if (lvl_3(par, pswd))
             printf("New: %s\n", pswd);
     }
 
     if (lvl == 4)
-        if (lvl_4(par, pswd))
+    {
+        if (lvl_4(par, pswd) == -1)
+            printf("Enter the correct parameter on this level (0 passwords were shown)\n");
+        else if (lvl_4(par, pswd))
             printf("New: %s\n", pswd);
+    }
 
     printf("\n");
 
