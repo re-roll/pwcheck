@@ -93,56 +93,107 @@ int lvl_2 (int p, char str[max_len])
 
 int lvl_3 (int p, char str[max_len])
 {
-        if (!(lvl_2(p, str)))
-            return 0;
+    if (!(lvl_2(p, str)))
+        return 0;
         
-        if (p == 1)
-            return -1;
+    if (p == 1)
+        return -1;
 
-        int j = 1;
-        int max = 0;
-        int len = strLen(str);
-        for (int i = 0; i < len; i++)
-        {
-            if (str[i] == str[i+1])
-            {
-                j++;
-                if (j > max)
-                    max = j;
-            }
-            else
-                j = 1;
-            
-        }
-        if (max >= p)
-            return 0;
+    int cnt = 1;
+
+    for (int i = 1; i < max_len; i++)
+    {
+        if (str[i] == str[i-1])
+            cnt++;
         else
-            return 1;
-}
+            cnt = 1;
 
-int subStr(int i, int j, char* str)
-{
-    int len = strLen(str);
-    for (i = 0; i < len; i++)
-        for (j = 1; j < len - 1; i++)
-            if (str[i] == str[j])
-                return 1;
-    
-    return 0;
+        if (cnt == p)
+            return 0;
+
+        if (str[i] == '\0')
+            break;
+    }
+     
+     return 1;
 }
 
 int lvl_4(int p, char str[max_len])
 {
     if (!(lvl_3(p, str)))
         return 0;
+        
+    if (p == 1)
+        return -1;
 
     int len = strLen(str);
-    for (int k = 2; k <= p; k++)
-        for (int i = 0; i < len; i++)
-            for (int j = 1; j < len - 1; i++)
-                if (subStr(i, j, str))
-                    return 0;
-    
+    int cnt = 0;
+    int alt_i = 0;
+    int alt_j = 0;
+
+    for (int i = 0; i < len; i++)
+    {
+        for (int j = i + 1; j < len; j++)
+        {
+            printf("%d %d\n", i, j);
+            if (str[i] == str[j])
+            {
+                cnt++;
+                alt_i = i;
+                alt_j = j;
+                printf("Count: %d char: %c\n", cnt, str[i]);
+                break;
+            }
+
+            if (str[i] == '\0')
+                break;
+            
+            if (alt_j != 0)
+                break;
+        }
+        if (alt_i != 0)
+            break;
+    }
+
+    alt_i++;
+    alt_j++;
+
+    printf("Zacatek\n");
+
+    for (int k = 1; k <= p; k++)
+    {
+        for (int i = alt_i; i < len - k; i++)
+        {
+            for (int j = alt_j; j <= len - k; j++)
+            {
+                printf("%d %d\n", i, j);
+                if (str[i] == str[j])
+                {
+                    cnt++;
+                    alt_i = i;
+                    alt_j = j;
+                    printf("Count: %d char: %c\n", cnt, str[i]);
+                    break;
+                }
+                
+
+                if (str[i] == '\0')
+                    break;
+                
+                if (alt_j != 0)
+                    break;
+            }
+            if (alt_i != 0)
+                break;
+        }
+        alt_i++;
+        alt_j++;
+        if (cnt == k)
+            break;
+    }
+
+    printf("Count is: %d\n", cnt);
+     
     return 1;
 }
 
