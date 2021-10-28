@@ -12,6 +12,21 @@ int strLen (char str[max_len])
     return i;
 }
 
+int cmprStr(char* str1, char* str2)
+{
+    int len = strLen(str1);
+    for (int i = 0; i < len; i++)
+    {
+        if (str1[i] != str2[i])
+            return 0;
+    }
+
+    if (strLen(str1) != strLen(str2))
+        return 0;
+
+    return 1;
+}
+
 int lowerCase (char str[max_len])
 {
     for (int i = 0; i < max_len; i++)
@@ -62,13 +77,13 @@ int specSym (char str[max_len])
 
 int lvl_1 (char str[max_len])
 {
-    int k = 0;
+    int cnt = 0;
     if (lowerCase(str))
-        k++;
+        cnt++;
     if (upperCase(str))
-        k++;
+        cnt++;
     
-    if (k == 2)
+    if (cnt == 2)
         return 1;
     
     return 0;
@@ -135,13 +150,11 @@ int lvl_4(int p, char str[max_len])
     {
         for (int j = i+1; j < len; j++)
         {
-            printf("%d %d\n", i, j);
             if (str[i] == str[j])
             {
                 cnt++;
                 alt_i = i;
                 alt_j = j;
-                printf("Count: %d char: %c; i: %d j: %d\n", cnt, str[i], i, j);
                 break;
             }
 
@@ -154,21 +167,21 @@ int lvl_4(int p, char str[max_len])
     alt_i++;
     alt_j++;
 
-    printf("Zacatek\n");
-
     for (int k = 1; k <= p; k++)
     {
         for (int i = alt_i; i < len - k; i++)
         {
             for (int j = alt_j; j <= len - k; j++)
             {
-                printf("%d %d\n", i, j);
                 if (str[i] == str[j])
                 {
-                    cnt++;
-                    alt_i = i;
-                    alt_j = j;
-                    printf("Count: %d char: %c\n", cnt, str[i]);
+                    while (cnt != p)
+                    {
+                        cnt++;
+                        alt_i = i;
+                        alt_j = j;
+                        break;
+                    }
                     break;
                 }
 
@@ -179,28 +192,11 @@ int lvl_4(int p, char str[max_len])
             alt_j++;
         }
         alt_i++;
-        if (cnt == k)
-            break;
     }
 
-    printf("Count is: %d\n", cnt);
-    printf("\n");
-     
-    return 1;
-}
-
-int cmprStr(char* str1, char* str2)
-{
-    int len = strLen(str1);
-    for (int i = 0; i < len; i++)
-    {
-        if (str1[i] != str2[i])
-            return 0;
-    }
-
-    if (strLen(str1) != strLen(str2))
+    if (cnt == p)
         return 0;
-
+     
     return 1;
 }
 
@@ -218,43 +214,47 @@ int main(int argc, char* argv[])
             par = atoi(argv[i]);
         if (cmprStr(argv[i], "--stats"))
             stats = 1;
+
     }
 
-    printf("Level: %d\n", lvl);
-    printf("Parameter: %d\n", par);
-    printf("-- stats: %d\n", stats);
+    if (par < 1)
+        printf("ERROR: Security parameter should be positive\n");
 
-    char pswd[100];
+    char pswd[max_len];
 
-    printf("\n");
-
-    scanf("%s", pswd);
-
-    if (lvl == 1)
-        if (lvl_1(pswd))
-            printf("New: %s\n", pswd);
-    
-    if (lvl == 2)
-        if (lvl_2(par, pswd))
-            printf("New: %s\n", pswd);
-
-    if (lvl == 3)
+    while (getchar() != EOF)
     {
-        if (lvl_3(par, pswd) == -1)
-            printf("Enter the correct parameter on this level (0 passwords were shown)\n");
-        else if (lvl_3(par, pswd))
-            printf("New: %s\n", pswd);
+        scanf("%s", pswd);
+            if (lvl == 1)
+        {
+            if (lvl_1(pswd))
+                printf("%s\n", pswd);
+        }
+        else if (lvl == 2)
+        {
+            if (lvl_2(par, pswd))
+                printf("%s\n", pswd);
+        }
+        else if (lvl == 3)
+        {
+            if (lvl_3(par, pswd) == -1)
+                printf("Enter the correct parameter on this level (0 passwords were shown)\n");
+            else if (lvl_3(par, pswd))
+                printf("%s\n", pswd);
+        }
+        else if (lvl == 4)
+        {
+            if (lvl_4(par, pswd) == -1)
+                printf("Enter the correct parameter on this level (0 passwords were shown)\n");
+            else if (lvl_4(par, pswd))
+                printf("%s\n", pswd);
+        }
+        else
+            printf("ERROR: Security level should be in the interval [1, 4]\n");
     }
 
-    if (lvl == 4)
-    {
-        if (lvl_4(par, pswd) == -1)
-            printf("Enter the correct parameter on this level (0 passwords were shown)\n");
-        else if (lvl_4(par, pswd))
-            printf("New: %s\n", pswd);
-    }
-
-    printf("\n");
+    if (stats == 1)
+    printf("Tady byde statistika\n");
 
     return 0;
 }
