@@ -14,15 +14,15 @@ int strLen (char str[max_len])
 
 int cmprStr(char* str1, char* str2)
 {
+    if (strLen(str1) != strLen(str2))
+        return 0;
+
     int len = strLen(str1);
     for (int i = 0; i < len; i++)
     {
         if (str1[i] != str2[i])
             return 0;
     }
-
-    if (strLen(str1) != strLen(str2))
-        return 0;
 
     return 1;
 }
@@ -135,50 +135,57 @@ int lvl_3 (int p, char str[max_len])
 
 int lvl_4(int p, char str[max_len])
 {
+    //Checking if 3 level returned "1"
     if (!(lvl_3(p, str)))
         return 0;
         
+    //There will be returned "error" because we cannot find substring with the length of 1, minimal length is 2
     if (p == 1)
         return -1;
 
-    int len = strLen(str);
-    int cnt = 0;
-    int alt_i = 0;
-    int alt_j = 1;
+    int len = strLen(str);  //Finding the length of our password
+    int cnt = 0;            //Starting number of symbols in substrings is 0
+    
+    int i;                  //Counter for symbols  in string [A, B, C, D, ...] Start in A
+    int j;                  //Counter for symbols  in string [A, B, C, D, ...] Start in B
+    
+    int alt_i = 0;          //2 Counter for symbols  in string [A, B, C, D, ...] Start in C
+    int alt_j = 1;          //2 Counter for symbols  in string [A, B, C, D, ...] Start in D
 
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < len; i++) // Everything below will be checked for i symbol
     {
-        for (int j = i+1; j < len; j++)
+        for (int j = i+1; j < len; j++) // Everything below will be checked for j symbol
         {
-            if (str[i] == str[j])
+            if (str[i] == str[j]) //Checking if value of i symbol is equal to value of j symbol
             {
-                cnt++;
-                alt_i = i;
-                alt_j = j;
-                break;
+                cnt++; //If str[0] == str[1] => We have 1 same symbol in all the substrings
+                alt_i = i; //Just to remember it, wi will need this counter later
+                alt_j = j; //Just to remember it, wi will need this counter later
+                break; //If we found 1 symbol in subtrings we no longer need this CHECKING in the pair i-j
             }
 
+            //I will delete it :)
             if (str[i] == '\0')
-                break;
+                break; //If we found 1 symbol in subtrings we no longer need this CHECKING in the pair i-j
         }
-        break;
+        break; //If we found 1 symbol in subtrings we no longer need this CHECKING in the pair i-j
     }
 
-    alt_i++;
-    alt_j++;
+    alt_i++; //Now our 2 counter will be modified and our next start position will be in symbol i+1 = 1
+    alt_j++; //Now our 2 counter will be modified and our next start position will be in symbol j+1 = 2
 
-    for (int k = 1; k <= p; k++)
+    for (int k = 1; k <= p; k++) 
     {
-        for (int i = alt_i; i < len - k; i++)
+        for (int i = alt_i; i < len - k; i++) // Everything below will be checked for i+1 symbol
         {
-            for (int j = alt_j; j <= len - k; j++)
+            for (int j = alt_j; j <= len - k; j++) // Everything below will be checked for j+1 symbol
             {
-                if (str[i] == str[j])
+                if (str[i] == str[j]) //Checking if value of i+1 symbol is equal to value of j+1 symbol
                 {
-                    while (cnt != p)
+                    while (cnt != p) //If we have param = 3 and we found symbols on the previous BIG ciklus, for now we have 1 symbol so this ciklus will be executed 2 times
                     {
-                        cnt++;
-                        alt_i = i;
+                        cnt++; //If str[1] == str[2] => We already have 2 same symbols in all the substrings
+                        alt_i = i; //...
                         alt_j = j;
                         break;
                     }
