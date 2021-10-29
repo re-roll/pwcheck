@@ -152,10 +152,11 @@ int lvl_4 (int p, char* str)
         return 0;
 
     int cnt = 0;
+    int len = strLen(str);
 
-    for (int i = 0; str[i] != '\0'; i++)
+    for (int i = 0; i < len - 1; i++)
     {
-        for (int j = i + 1; str[i] != '\0'; j++)
+        for (int j = i + 1; j <= len - 1; j++)
         {
             if (str[i] == str[j])
             {
@@ -170,8 +171,8 @@ int lvl_4 (int p, char* str)
                         alt_j++;
                         cnt++;
                     }
-                    if (cnt == p)
-                        return 0;
+                if (cnt == p)
+                    return 0;
                 }
             }
             else 
