@@ -141,64 +141,105 @@ int lvl_4(int p, char str[max_len])
     return 1;
 }
 
-int main(int argc, char* argv[])
+int passInput(char* pswd)
 {
-    int lvl = 0;
-    int par = 0;
-    int stats = 0;
-
-    for (int i = 1; i < argc; i++)
-    {
-        if (i == 1)
-            lvl = atoi(argv[i]);
-        if (i == 2)
-            par = atoi(argv[i]);
-        if (cmprStr(argv[i], "--stats"))
-            stats = 1;
-
-    }
-
-    if (par < 1)
-        printf("ERROR: Security parameter should be positive\n");
-
-    char pswd[max_len];
     char c;
     int i = 0;
 
-    while ((c = getchar()) != '\n')
+    while ( (c = getchar()) != '\n')
     {
-        pswd[i] = c;
+        if (i > max_len - 1)
+            return -1;
+        if (c == EOF)
+            return -2;
+
+        *(pswd + i) = c;
         i++;
     }
-        printf("pswd: %s\n", pswd);
+    *(pswd + i) = '\0';
+    return 0;
+}
 
-    if (lvl == 1)
+int main(int argc, char* argv[])
+{
+    //Declaration of variables for our arguments
+    int lvl = 0;
+    int par = 0;
+    int stats = 0;
+    //Variables assignment for our arguments
+    for (int i = 1; i < argc; i++) //Cycle will stop if there are no more characters (arguments) in our string
+    {
+        if (i == 1) 
+            lvl = atoi(argv[i]); //On the first place should be security level
+        if (i == 2)
+            par = atoi(argv[i]); //On the second place should be security parameter
+        if ((i == 3) && (cmprStr(argv[i], "--stats"))) //On the third place should be statistics (or shouldn't, we check it with the help of "cmprStr" function)
+            stats = 1; //THERE WILL BE STATISTICS
+    }
+    //Start of errrors zone
+    if ((!(lvl < 4)) || (!(lvl > 1))) //I wrote explanation of this in the "printf" for user
+    {
+        printf("ERROR! Security level should exist and be integer in the interval [1, 4]\n");
+        return -1; //Program will stop
+    }
+    if (!(par > 1)) //I also wrote explanation of this in the "printf" for user
+    {
+        printf("ERROR! Security parameter should exist and be positive integer\n");
+        return -2; //Program will stop
+    }
+    //End of errors zone
+
+    //Declarations of variables "buffer for passwords" and variable that will check "if we have some errors" on the input
+    char pswd[max_len];
+    int codeOfError;
+    //End of declarations
+
+    while (1) //Cycle will stop only if there are any errors (and they will be, for example End Of File)
+    {
+        //Start of errrors zone
+        codeOfError = passInput(pswd); //We get Error Code from function
+        if (codeOfError == -1) //This error code is already explained
+        {
+            printf("***\n");
+            printf("WARNING! We cannot produce some password(s) due to its length. Check out your input file, please\n");
+            printf("***\n");
+            return -1; //Program will stop with "printf" for explanation of the error
+        }
+        if ( codeOfError == -2)
+            break; //Cycle will break due to the End Of File
+        //End of errrors zone
+
+        //Here is starting the checking for each password in file
+        if (lvl == 1)
         {
             if (lvl_1(pswd))
-                printf("%s\n", pswd);
+                printf("%s\n", pswd); //If password is enough good for Level#1 the program will write it down
         }
         else if (lvl == 2)
         {
             if (lvl_2(par, pswd))
-                printf("%s\n", pswd);
+                printf("%s\n", pswd); //If password is enough good for Level#2 the program will write it down
         }
         else if (lvl == 3)
         {
             if (lvl_3(par, pswd) == -1)
-                printf("Enter the correct parameter on this level (0 passwords were shown)\n");
+                printf("Enter the correct parameter on this level (0 passwords were shown)\n"); //This error is explained in "printf"
             else if (lvl_3(par, pswd))
-                printf("%s\n", pswd);
+                printf("%s\n", pswd); //If password is enough good for Level#3 the program will write it down
         }
         else if (lvl == 4)
         {
             if (lvl_4(par, pswd))
-                printf("%s\n", pswd);
+                printf("%s\n", pswd); //If password is enough good for Level#4 the program will write it down
         }
-        else
-            printf("ERROR: Security level should be in the interval [1, 4]\n");
-
+        
+        //In this cycle I refresh my "buffer" because of strings length (for some purpose my program "fills" string (after it ends) with symbols of previous password)
+        for (int i = 0; i < max_len; i++)
+            pswd[i] = 0;
+    }
+    //All the below stops exist if you did the statistics function
     if (stats == 1)
     printf("Tady byde statistika\n");
 
-    return 0;
+    return 0; //Program is done
 }
