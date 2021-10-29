@@ -29,6 +29,18 @@ int cmprStr(char* str1, char* str2) //Function gets two strings and compare it
     return 1; //I will get 1 if strings are the same
 }
 
+/*int cmprSubStr(char* str) 
+{
+    int cnt = 0;
+    int len = strLen(str); 
+    for (int alt_i = 0; alt_i < len - 1; alt_i++) 
+        for (int alt_j = 1; alt_j <= len; alt_j++)
+            if (str[alt_i] == str[alt_j]) 
+                cnt++; 
+
+    return cnt; 
+}
+*/
 
 int lowerCase (char str[max_len])
 {
@@ -139,29 +151,38 @@ int lvl_4 (int p, char* str)
     if (!(lvl_3(p, str)))
         return 0;
 
-    int cnt = 1;
-    int i = 0;
-    int j = 1;
+    int cnt = 0;
 
-    int len = strLen(str); 
-    for (int alt_i = 0; alt_i < len - 1; alt_i++) 
-        for (int alt_j = 1; alt_j <= len; alt_j++)
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        for (int j = i + 1; str[i] != '\0'; j++)
         {
-            if (str[alt_i] == str[alt_j])
-                {   
-                    if (  ( ((alt_i - i) == 1) && ((alt_j - j) == 1) ) || ( ((alt_j - i) == 1) && ((alt_j - i) == 1) )  )
+            if (str[i] == str[j])
+            {
+                int alt_i = i;
+                int alt_j = j;
+                cnt++;
+                for (int k = 1; k < p; k++)
+                {
+                    if (str[alt_i + 1] == str[alt_j + 1])
                     {
+                        alt_i++;
+                        alt_j++;
                         cnt++;
                     }
-                    if (alt_i == alt_j)
-                        break;
-                    i = alt_i;
-                    j = alt_j;
-                    printf("alt_i: %d, alt_j: %d, count: %d\n", alt_i, alt_j, cnt);
-                    printf("\n");
+                    if (cnt == p)
+                        return 0;
                 }
+            }
+            else 
+                cnt = 0;
         }
-    return 1;
+        
+    }
+    if (cnt != p)
+        return 1;
+
+    return 0;
 }
 
 int passInput(char* pswd)
