@@ -220,6 +220,8 @@ int read(int lvl, int p)
     char pswd[max_len];
     int codeOfError;
     int cnt = 0;
+    int i = 0;
+    int alt_i = 0;
     //End of declarations
 
     while (1) //Cycle will stop only if there are any errors (and they will be, for example End Of File)
@@ -263,14 +265,18 @@ int read(int lvl, int p)
             if (lvl_4(p, pswd))
                 printf("%s\n", pswd); //If password is enough good for Level#4 the program will write it down
         }
+
+        alt_i = strLen(pswd);
+        i +=strLen(pswd); // Length of ALL strings (for 0 iteration - 1 pass, for 1 - 1+2 passes etc.)
         
         //In this cycle I refresh my "buffer" because of strings length (for some purpose my program "fills" string (after it ends) with symbols of previous password)
         for (int i = 0; i < max_len; i++)
             pswd[i] = 0;
 
-        cnt++;
-            
+        cnt++; // Number of ALL strings
     }
+    double AVG = (double)i / cnt;
+    printf("%.1f\n", AVG);
     return 0;
 }
 
