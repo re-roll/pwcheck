@@ -189,7 +189,6 @@ int passInput(char* pswd)
 
         *(pswd + i) = c;
         i++; //Counter AND length of string
-        
     }
     return 0;
 }
@@ -215,13 +214,15 @@ int errorsZone (int lvl, int p)
     return 0;
 }
 
-int read(int lvl, int p)
+int read(int lvl, int p, int stats)
 {
     char pswd[max_len];
     int codeOfError;
+
     int cnt = 0;
-    int i = 0;
-    int alt_i = 0;
+    int LENGTH = 0;
+    int MIN = max_len;
+    int NCHARS = 0;
     //End of declarations
 
     while (1) //Cycle will stop only if there are any errors (and they will be, for example End Of File)
@@ -266,8 +267,10 @@ int read(int lvl, int p)
                 printf("%s\n", pswd); //If password is enough good for Level#4 the program will write it down
         }
 
-        alt_i = strLen(pswd);
-        i +=strLen(pswd); // Length of ALL strings (for 0 iteration - 1 pass, for 1 - 1+2 passes etc.)
+        if (MIN > strLen(pswd))
+            MIN = strLen(pswd);
+
+        LENGTH +=strLen(pswd); // Length of ALL strings (for 0 iteration - 1 pass, for 1 - 1+2 passes etc.)
         
         //In this cycle I refresh my "buffer" because of strings length (for some purpose my program "fills" string (after it ends) with symbols of previous password)
         for (int i = 0; i < max_len; i++)
@@ -275,8 +278,15 @@ int read(int lvl, int p)
 
         cnt++; // Number of ALL strings
     }
-    double AVG = (double)i / cnt;
-    printf("%.1f\n", AVG);
+    double AVG = (double)LENGTH / cnt;
+    if (stats == 1)
+    {
+        printf("Statistika: \n");
+        printf("Ruznych znaku: %d\n", NCHARS);
+        printf("Minimalni delka: %d\n", MIN);
+        printf("Prumerna delka: %.1f\n", AVG);
+    }
+
     return 0;
 }
 
@@ -298,11 +308,7 @@ int main(int argc, char* argv[])
     }
     
     errorsZone (lvl, p);
-    read(lvl, p);
-    
-    //All the below stops exist if you did the statistics function
-    if (stats == 1)
-        printf("Tady byde statistika\n");
+    read(lvl, p, stats);
 
     return 0; //Program is done
 }
