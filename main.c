@@ -5,7 +5,7 @@
 
 int strLen (char str[max_len]) //Function gets the string and process it
 {
-    int i; //Counter
+    int i = 0; //Counter
 
     //While the program won't find the last symbol of string, I count its length
     while (str[i] != '\0') 
@@ -285,20 +285,18 @@ int checking(int lvl, int p, int stats)
             MIN = strLen(pswd);
 
         LENGTH +=strLen(pswd); // Length of ALL strings (for 0 iteration - 1 pass, for 1 - 1+2 passes etc.)
-        
-        difSym(asciit, pswd);
+        if (stats == 1)
+            difSym(asciit, pswd);
 
         cnt++; // Number of ALL strings
     }
-    int cntsym = 0;
-    for (int i = 0; i < 127; i++)
-        if (asciit[i] != 0)
-            cntsym++;
-    printf("%d\n", cntsym);
-
-    double AVG = (double)LENGTH / cnt;
+    
     if (stats == 1)
     {
+        double AVG = (double)LENGTH / cnt;
+        for (int i = 0; i < 127; i++)
+        if (asciit[i] != 0)
+            NCHARS++;
         printf("Statistika: \n");
         printf("Ruznych znaku: %d\n", NCHARS);
         printf("Minimalni delka: %d\n", MIN);
