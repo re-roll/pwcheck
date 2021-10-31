@@ -33,10 +33,7 @@ void difSym (char* asciit, char pswd[max_len])
 {
     int len = strLen(pswd);
     for (int i = 0; i < len; i++)
-    {
         *(asciit + pswd[i]) = 1;
-        printf("%s\n", pswd);
-    }
 
 }
 
@@ -238,11 +235,12 @@ int checking(int lvl, int p, int stats)
 
     char asciit[127];
     for (int i = 0; i < 127; i++)
-    {
-        asciit[i] = '0';
-    }
+        asciit[i] = 0;
     while (1) //Cycle will stop only if there are any errors (and they will be, for example End Of File)
     {
+        //In this cycle I refresh my "buffer" because of strings length (for some purpose my program "fills" string (after it ends) with symbols of previous password)
+        for (int i = 0; i < max_len; i++)
+            pswd[i] = 0;
         codeOfError = passInput(pswd); //We get Error Code from function
         if (codeOfError == -1) //This error code is already explained
         {
@@ -288,12 +286,9 @@ int checking(int lvl, int p, int stats)
 
         LENGTH +=strLen(pswd); // Length of ALL strings (for 0 iteration - 1 pass, for 1 - 1+2 passes etc.)
         
-        //In this cycle I refresh my "buffer" because of strings length (for some purpose my program "fills" string (after it ends) with symbols of previous password)
-        for (int i = 0; i < max_len; i++)
-            pswd[i] = 0;
+        difSym(asciit, pswd);
 
         cnt++; // Number of ALL strings
-        difSym(asciit, pswd);
     }
     int cntsym = 0;
     for (int i = 0; i < 127; i++)
