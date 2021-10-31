@@ -206,12 +206,14 @@ int passInput(char* pswd)
     {
         if (i > max_len - 1)
             return -1;
+        
         if (c == EOF)
             return -2;
 
         *(pswd + i) = c;
         i++; //Counter AND length of string
     }
+    
     return 0;
 }
 
@@ -234,9 +236,12 @@ int checking(int lvl, int p, int stats)
         //In this cycle I refresh my "buffer" because of strings length (for some purpose my program "fills" string (after it ends) with symbols of previous password)
         for (int i = 0; i < max_len; i++)
             pswd[i] = 0;
+
         codeOfError = passInput(pswd); //We get Error Code from function
+
         if (codeOfError == -1) //This error code is already explained
         {
+            fprintf(stderr, "Password is too long\n");
             return -1; //Program will stop with "printf" for explanation of the error
         }
         if ( codeOfError == -2)
@@ -274,6 +279,12 @@ int checking(int lvl, int p, int stats)
 
         cnt++; // Number of ALL strings
     }
+    int len = strLen(pswd);
+        if (len > 100)
+        {
+            fprintf(stderr, "Length of password is too long; max: 100");
+            return -1;
+        }
     
     if (stats == 1)
     {
@@ -284,7 +295,7 @@ int checking(int lvl, int p, int stats)
         printf("Statistika: \n");
         printf("Ruznych znaku: %d\n", NCHARS);
         printf("Minimalni delka: %d\n", MIN);
-        printf("Prumerna delka: %.1f\n", AVG);
+        printf("Prumerna delka: %.1f", AVG);
     }
 
     return 0;
@@ -337,7 +348,8 @@ int main(int argc, char* argv[])
         }
     }
     
-    checking(lvl, p, stats);
+    if (checking(lvl, p, stats) != 0)
+        return -1;
 
     return 0; //Program is done
 }
