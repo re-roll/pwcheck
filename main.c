@@ -19,7 +19,10 @@ int convertStr(int* arg, char* str)
     int len = strLen(str);
     for (int i = 0; i < len; i++)
         if ((str[i] < 48) || (str[i] > 57))
+        {
+            fprintf(stderr, "You entered the wrong argument\n");
             return -1;
+        }
     
     *arg = atoi(str);
     return 0;
@@ -212,27 +215,6 @@ int passInput(char* pswd)
     return 0;
 }
 
-int errorsZone (int lvl, int p)
-{
-    if (((lvl > 4) || (lvl < 1)) && (p < 1))//I wrote explanation of this in the "printf" for user
-    {
-        printf("ERROR! Security level should exist and be integer in the interval [1, 4]\n");
-        printf("ERROR! Security parameter should exist and be positive integer\n");
-        return -1; 
-    }
-    if ((lvl > 4) || (lvl < 1))//I wrote explanation of this in the "printf" for user
-    {
-        printf("ERROR! Security level should exist and be integer in the interval [1, 4]\n");
-        return -2; 
-    }
-    if (p < 1) //I also wrote explanation of this in the "printf" for user
-    {
-        printf("ERROR! Security parameter should exist and be positive integer\n");
-        return -3; //Program will stop
-    }
-    return 0;
-}
-
 int checking(int lvl, int p, int stats)
 {
     char pswd[max_len];
@@ -273,15 +255,11 @@ int checking(int lvl, int p, int stats)
         }
         else if (lvl == 3)
         {
-            if (p == 1)
-                printf("Enter the correct parameter on this level (0 passwords were shown)\n"); //This error is explained in "printf"
-            else if (lvl_3(p, pswd))
+            if (lvl_3(p, pswd))
                 printf("%s\n", pswd); //If password is enough good for Level#3 the program will write it down
         }
         else if (lvl == 4)
         {
-            if (p == 1)
-                printf("Enter the correct parameter on this level (0 passwords were shown)\n"); //This error is explained in "printf"
             if (lvl_4(p, pswd))
                 printf("%s\n", pswd); //If password is enough good for Level#4 the program will write it down
         }
@@ -318,18 +296,47 @@ int main(int argc, char* argv[])
     int lvl = 0;
     int p = 0;
     int stats = 0;
+
+    if (argc < 3)
+    {
+        fprintf(stderr, "You entered too few arguments\n");
+        return -1;
+    }
     //Variables assignment for our arguments
     for (int i = 1; i < argc; i++) //Cycle will stop if there are no more characters (arguments) in our string
     {
         if (i == 1) 
+        {
             convertStr(&lvl, argv[i]); //On the first place should be security level
+            if ((lvl > 4) || (lvl < 1))
+            {
+                fprintf(stderr, "Check out your level\n");
+                return -1;
+            }
+        }
         if (i == 2)
+        {
             convertStr(&p, argv[i]); //On the second place should be security parameter
+            if (p < 1)
+            {
+                fprintf(stderr, "Check out your parameter\n");
+                return -1;
+            }
+        }
         if ((i == 3) && (cmprStr(argv[i], "--stats"))) //On the third place should be statistics (or shouldn't, we check it with the help of "cmprStr" function)
             stats = 1; //THERE WILL BE STATISTICS
+        else if ((i == 3) && (!(cmprStr(argv[i], "--stats"))))
+        {
+            fprintf(stderr, "Check out your stats\n");
+            return -1;
+        }
+        else if (i > 3)
+        {
+            fprintf(stderr, "Check out your arguements\n");
+            return -1;
+        }
     }
     
-    errorsZone (lvl, p);
     checking(lvl, p, stats);
 
     return 0; //Program is done
