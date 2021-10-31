@@ -29,6 +29,17 @@ int cmprStr(char* str1, char* str2) //Function gets two strings and compare it
     return 1; //I will get 1 if strings are the same
 }
 
+void difSym (char* asciit, char pswd[max_len])
+{
+    int len = strLen(pswd);
+    for (int i = 0; i < len; i++)
+    {
+        *(asciit + pswd[i]) = 1;
+        printf("%s\n", pswd);
+    }
+
+}
+
 int lowerCase (char str[max_len])
 {
     for (int i = 0; i < max_len; i++)
@@ -214,7 +225,7 @@ int errorsZone (int lvl, int p)
     return 0;
 }
 
-int read(int lvl, int p, int stats)
+int checking(int lvl, int p, int stats)
 {
     char pswd[max_len];
     int codeOfError;
@@ -225,6 +236,11 @@ int read(int lvl, int p, int stats)
     int NCHARS = 0;
     //End of declarations
 
+    char asciit[127];
+    for (int i = 0; i < 127; i++)
+    {
+        asciit[i] = '0';
+    }
     while (1) //Cycle will stop only if there are any errors (and they will be, for example End Of File)
     {
         codeOfError = passInput(pswd); //We get Error Code from function
@@ -277,7 +293,14 @@ int read(int lvl, int p, int stats)
             pswd[i] = 0;
 
         cnt++; // Number of ALL strings
+        difSym(asciit, pswd);
     }
+    int cntsym = 0;
+    for (int i = 0; i < 127; i++)
+        if (asciit[i] != 0)
+            cntsym++;
+    printf("%d\n", cntsym);
+
     double AVG = (double)LENGTH / cnt;
     if (stats == 1)
     {
@@ -308,7 +331,7 @@ int main(int argc, char* argv[])
     }
     
     errorsZone (lvl, p);
-    read(lvl, p, stats);
+    checking(lvl, p, stats);
 
     return 0; //Program is done
 }
