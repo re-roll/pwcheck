@@ -14,6 +14,17 @@ int strLen (char str[max_len]) //Function gets the string and process it
     return i; // From now I will be getting length of string from this function
 }
 
+int convertStr(int* arg, char* str)
+{
+    int len = strLen(str);
+    for (int i = 0; i < len; i++)
+        if ((str[i] < 48) || (str[i] > 57))
+            return -1;
+    
+    *arg = atoi(str);
+    return 0;
+}
+
 int cmprStr(char* str1, char* str2) //Function gets two strings and compare it
 {
     //We can break the function and return 0 here if our lengths of strings are not equal
@@ -263,20 +274,14 @@ int checking(int lvl, int p, int stats)
         else if (lvl == 3)
         {
             if (p == 1)
-            {
                 printf("Enter the correct parameter on this level (0 passwords were shown)\n"); //This error is explained in "printf"
-                break;
-            }
             else if (lvl_3(p, pswd))
                 printf("%s\n", pswd); //If password is enough good for Level#3 the program will write it down
         }
         else if (lvl == 4)
         {
             if (p == 1)
-            {
                 printf("Enter the correct parameter on this level (0 passwords were shown)\n"); //This error is explained in "printf"
-                break;
-            }
             if (lvl_4(p, pswd))
                 printf("%s\n", pswd); //If password is enough good for Level#4 the program will write it down
         }
@@ -285,6 +290,7 @@ int checking(int lvl, int p, int stats)
             MIN = strLen(pswd);
 
         LENGTH +=strLen(pswd); // Length of ALL strings (for 0 iteration - 1 pass, for 1 - 1+2 passes etc.)
+
         if (stats == 1)
             difSym(asciit, pswd);
 
@@ -316,9 +322,9 @@ int main(int argc, char* argv[])
     for (int i = 1; i < argc; i++) //Cycle will stop if there are no more characters (arguments) in our string
     {
         if (i == 1) 
-            lvl = atoi(argv[i]); //On the first place should be security level
+            convertStr(&lvl, argv[i]); //On the first place should be security level
         if (i == 2)
-            p = atoi(argv[i]); //On the second place should be security parameter
+            convertStr(&p, argv[i]); //On the second place should be security parameter
         if ((i == 3) && (cmprStr(argv[i], "--stats"))) //On the third place should be statistics (or shouldn't, we check it with the help of "cmprStr" function)
             stats = 1; //THERE WILL BE STATISTICS
     }
